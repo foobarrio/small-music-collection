@@ -17,6 +17,24 @@ Usage:
   quit                        Quits the program
 `;
 
+function completer(line) {
+  let commands;
+
+  if (line.startsWith('show all')) {
+    commands = ['show all', 'show all by '];
+  } else if (line.startsWith('show unplayed')) {
+    commands = ['show unplayed', 'show unplayed by '];
+  } else if (line.startsWith('show')) {
+    commands = ['show all', 'show unplayed'];
+  } else {
+    commands = ['add ', 'play ', 'quit', 'show '];
+  }
+
+  const suggestions = commands.filter(command => command.startsWith(line));
+
+  return [suggestions.length ? suggestions : commands, line];
+}
+
 function execute(line) {
   const command = line.trim().split(' ')[0];
 
@@ -95,6 +113,7 @@ function execute(line) {
 }
 
 module.exports = {
+  completer,
   execute,
   invalidCommandRepsonse: INVALID_COMMAND_REPSONSE,
 };

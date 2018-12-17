@@ -2,6 +2,7 @@ const readline = require('readline');
 const commands = require('./commands');
 
 const rl = readline.createInterface({
+  completer: commands.completer,
   input: process.stdin,
   output: process.stdout,
 });
