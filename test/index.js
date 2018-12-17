@@ -1,5 +1,3 @@
-
-
 const assert = require('assert');
 const commands = require('../src/commands');
 
@@ -8,6 +6,7 @@ describe('add', () => {
     const response = commands.execute('show all');
     assert.equal(response, 'Nothing to show');
   });
+
   it('adds "Ride the Lightning" by Metallica', () => {
     const response = commands.execute('add "Ride the Lightning" "Metallica"');
     assert.equal(response, 'Added "Ride the Lightning" by Metallica');
@@ -110,5 +109,32 @@ describe('show', () => {
   it('handles show by non-existant artist', () => {
     const response = commands.execute('show all by "Steely Dan"');
     assert.equal(response, 'Nothing to show');
+  });
+});
+
+const spotify2018Top10 = require('./spotify-2018-top-20');
+
+describe('add and play from Spotify info', () => {
+  const expectedShowAllResponses = ['"Ride the Lightning" by Metallica (unplayed)\n"Licensed to Ill" by Beastie Boys (played)\n"Paul\'s Boutique" by Beastie Boys (unplayed)\n"The Dark Side of the Moon" by Pink Floyd (played)\n"Strange Weather, Isn\'t It?" by !!! (unplayed)\n'];
+
+  spotify2018Top10.forEach((entry) => {
+    const [artist, album] = entry;
+
+    it(`adds ${album} by ${artist}`, () => {
+      const response = commands.execute(`add "${album}" "${artist}"`);
+      assert.equal(response, `Added "${album}" by ${artist}`);
+    });
+
+    it(`plays ${album}`, () => {
+      const response = commands.execute(`play "${album}"`);
+      assert.equal(response, `You're listening to "${album}"`);
+    });
+
+    expectedShowAllResponses.push(`"${album}" by ${artist} (played)\n`);
+  });
+
+  it('shows all', () => {
+    const response = commands.execute('show all');
+    assert.equal(response, expectedShowAllResponses.join(''));
   });
 });

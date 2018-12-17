@@ -1,5 +1,3 @@
-
-
 const Collection = require('./collection');
 
 const collection = new Collection();
